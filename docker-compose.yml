@@ -1,0 +1,63 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - USERS_SERVICE_URL=http://users:5001
+      - COURSES_SERVICE_URL=http://courses:5002
+      - TASKS_SERVICE_URL=http://tasks:5003
+    depends_on:
+      - users
+      - courses
+      - tasks
+
+  users:
+    build: ./users_service
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@db:5432/db
+    depends_on:
+      - db
+
+  courses:
+    build: ./courses_service
+    ports:
+      - "5002:5002"
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@db:5432/db
+      - USERS_SERVICE_URL=http://users:5001
+    depends_on:
+      - db
+
+  tasks:
+    build: ./tasks_service
+    ports:
+      - "5003:5003"
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@db:5432/db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

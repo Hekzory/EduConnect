@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ course.title }}</h1>
+<p>{{ course.description }}</p>
+
+<h2>Tasks</h2>
+{% for task in tasks %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ task.title }}</h5>
+        <p class="card-text">{{ task.description }}</p>
+        {% if task.deadline %}
+        <p class="text-muted">Deadline: {{ task.deadline }}</p>
+        {% endif %}
+        {% if 'user_id' in session %}
+        <form method="POST" action="{{ url_for('main.submit_task', task_id=task.id) }}">
+            <div class="mb-3">
+                <label for="content" class="form-label">Your submission</label>
+                <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+            </div>
+            <input type="hidden" name="course_id" value="{{ course.id }}">
+            <button type="submit" class="btn btn-primary">Submit Task</button>
+        </form>
+        {% else %}
+        <p class="text-warning">Please login to submit tasks</p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
