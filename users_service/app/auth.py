@@ -1,7 +1,7 @@
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from functools import wraps
-from flask import request, jsonify, current_app
+from flask import request, jsonify
 import os
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'your-secret-key')  # Use proper secret in production
@@ -11,8 +11,8 @@ JWT_EXPIRATION_DELTA = timedelta(days=1)
 def generate_token(user_id):
     payload = {
         'user_id': user_id,
-        'exp': datetime.utcnow() + JWT_EXPIRATION_DELTA,
-        'iat': datetime.utcnow()
+        'exp': datetime.now(UTC) + JWT_EXPIRATION_DELTA,
+        'iat': datetime.now(UTC)
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 

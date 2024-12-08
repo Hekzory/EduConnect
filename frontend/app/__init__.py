@@ -4,9 +4,12 @@ import os
 
 login_manager = LoginManager()
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'your-secret-key'
+    if config is None:
+        app.config['SECRET_KEY'] = 'your-secret-key'  # In production, use proper secret key
+    elif config:
+        app.config.update(config)
     
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'

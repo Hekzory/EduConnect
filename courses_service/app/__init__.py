@@ -4,9 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    if config is None:
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    elif config:
+        app.config.update(config)
     
     db.init_app(app)
     

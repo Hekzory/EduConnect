@@ -1,10 +1,9 @@
 import sys
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required
 import requests
 import os
 from .models import User
-from flask import current_app as app
 
 bp = Blueprint('main', __name__)
 
@@ -59,9 +58,11 @@ def get_auth_headers() -> dict[str, str]:
 
 @bp.route('/')
 def index():
-    response = requests.get(f'{COURSES_SERVICE}/courses', headers=get_auth_headers())
-    print(str(response.text), file=sys.stderr)
-    courses = response.json() if response.ok else []
+    if COURSES_SERVICE is not None:
+        response = requests.get(f'{COURSES_SERVICE}/courses', headers=get_auth_headers())
+        courses = response.json() if response.ok else []
+    else:
+        courses = []
     return render_template('index.html', courses=courses)
 
 @bp.route('/course/<int:course_id>')

@@ -58,7 +58,7 @@ def login():
 @bp.route('/users/me', methods=['GET'])
 @token_required
 def get_current_user(user_id):
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({'message': 'User not found'}), 404
     return jsonify({
@@ -70,7 +70,9 @@ def get_current_user(user_id):
 @bp.route('/users/<int:user_id>', methods=['GET'])
 @token_required
 def get_user(current_user_id, user_id):
-    user = User.query.get_or_404(user_id)
+    user = db.session.get(User, user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
     return jsonify({
         'id': user.id,
         'username': user.username,
@@ -90,7 +92,7 @@ def verify_token():
         if user_id is None:
             return jsonify({'valid': False}), 401
             
-        user = User.query.get(user_id)
+        user = db.session.get(User, user_id)
         if not user:
             return jsonify({'valid': False}), 401
             
