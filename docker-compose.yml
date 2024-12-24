@@ -45,6 +45,7 @@ services:
       - FLASK_APP=app
       - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:password@db:5432/db
+      - USERS_SERVICE_URL=http://users:5001
     depends_on:
       - db
 

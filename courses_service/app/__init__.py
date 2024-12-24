@@ -25,7 +25,7 @@ def create_app(config=None):
             course1 = Course(
                 title='Основы программирования',
                 description='Введение в программирование на Python',
-                instructor_id=1  # Замените на корректный ID инструктора
+                instructor_id=1
             )
             db.session.add(course1)
             db.session.commit()

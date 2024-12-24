@@ -13,7 +13,6 @@
         {% if task.deadline %}
         <p class="text-muted">Deadline: {{ task.deadline }}</p>
         {% endif %}
-        {% if 'user_id' in session %}
         <form method="POST" action="{{ url_for('main.submit_task', task_id=task.id) }}">
             <div class="mb-3">
                 <label for="content" class="form-label">Your submission</label>
@@ -22,9 +21,6 @@
             <input type="hidden" name="course_id" value="{{ course.id }}">
             <button type="submit" class="btn btn-primary">Submit Task</button>
         </form>
-        {% else %}
-        <p class="text-warning">Please login to submit tasks</p>
-        {% endif %}
     </div>
 </div>
 {% endfor %}
